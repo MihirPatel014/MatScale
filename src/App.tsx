@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import emailjs from '@emailjs/browser';
 import { 
   Settings, 
   MousePointer2, 
@@ -156,15 +157,36 @@ const Newsletter = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setIsSubmitting(true);
-    setTimeout(() => {
+    
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('EmailJS Configuration Missing:', { serviceId, templateId, publicKey });
+      alert('Subscription is currently unavailable (Configuration Error).');
       setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await emailjs.send(serviceId, templateId, { 
+        email: email, 
+        name: email.split('@')[0] // Fallback name from email
+      }, publicKey);
+
       setIsSubscribed(true);
       setEmail('');
-    }, 1500);
+    } catch (error) {
+      console.error('EmailJS error:', error);
+      alert('Something went wrong. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
