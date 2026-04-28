@@ -1,15 +1,8 @@
-# Dependencies
 node_modules/
-
-# Build outputs
-dist/
 build/
-
-# Environemnt variables
-.env
-.env.local
-
-# IDEs
-.vscode/
-.idea/
+dist/
+coverage/
 .DS_Store
+*.log
+.env*
+!.env.example

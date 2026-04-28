@@ -1,0 +1,5 @@
+{
+  "name": "MatScale",
+  "description": "A desk mat fit visualizer that helps you compare real-world mat sizes against your keyboard and mouse setup.",
+  "requestFramePermissions": []
+}
